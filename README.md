@@ -7,11 +7,12 @@
 4. **Separar dígitos.** Implementa el _procedimiento_ **separar_digitos** que, dado un número positivo y devuelva un vector con sus dígitos (si tuviera menos de 10 cifras se rellenaría con ceros a la izquierda) y devuelva también cuántos de esos dígitos son impares. Así, para 123456 debe devolver (0,0,0,0, 1,2,3,4,5,6) y 3 (dígitos impares); para 2468024680 debe devolver (2,4,6,8,0,2,4,6,8,0) y 0.
 5. **Binario a decimal.** Implementa la _función_ **binario_a_decimal** que dado un vector de 10 unos y ceros, devuelva el valor decimal que le corresponde a ese número. Así, para (0,0,0,0,0,1,0,0,1,0) devuelve $`18 = 1*2^4 + 0*2^3 + 0*2^2 + 1*2^1 + 0*2^0`$.
 6. **Rot13.** Implementa el _procedimiento_ **rot13** que, dado un string de 10 caracteres, le aplica el cifrado rot13.
->ROT13 («rotar 13 posiciones») es un sencillo cifrado César utilizado para ocultar un texto sustituyendo cada letra por la letra que está trece posiciones por delante en el alfabeto. La A se convierte en N, la B se convierte en O y así hasta la M, que se convierte en Z. Luego la secuencia se invierte: la N se convierte en A, la O se convierte en B y así hasta la Z, que se convierte en M. Lo mismo ocurre con las letras minúsculas, mientras que cualquier otro carácter que haya, se deja tal cual. Este algoritmo se utiliza en foros de Internet como medio para ocultar de miradas casuales el final de un chiste, la solución a un acertijo, el destripe de una película o una historia, o algún texto ofensivo.
 
-_(Fuente: [Artículo de Wikipedia sobre el cifrado ROT13](https://es.wikipedia.org/wiki/ROT13))_
+    >ROT13 («rotar 13 posiciones») es un sencillo cifrado César utilizado para ocultar un texto sustituyendo cada letra por la letra que está trece posiciones por delante en el alfabeto. La A se convierte en N, la B se convierte en O y así hasta la M, que se convierte en Z. Luego la secuencia se invierte: la N se convierte en A, la O se convierte en B y así hasta la Z, que se convierte en M. Lo mismo ocurre con las letras minúsculas, mientras que cualquier otro carácter que haya, se deja tal cual. Este algoritmo se utiliza en foros de Internet como medio para ocultar de miradas casuales el final de un chiste, la solución a un acertijo, el destripe de una película o una historia, o algún texto ofensivo.
 
-![Fig. 1](https://github.com/lukabergs/ia-pb-lab06/assets/52601751/68a20809-6ae3-42b9-aaa1-9858171c0622)
+    _(Fuente: [Artículo de Wikipedia sobre el cifrado ROT13](https://es.wikipedia.org/wiki/ROT13))_
+
+    ![Fig. 1](https://github.com/lukabergs/ia-pb-lab06/assets/52601751/68a20809-6ae3-42b9-aaa1-9858171c0622)
 
 ### TAREA 2. Ejercicios extra
 7. **Dígito de control de una cuenta bancaria.** Implementa una función digito_control que, dado un número de cuenta corriente de 10 dígitos representado en un vector de 10 dígitos, devuelva el dígito de control que le corresponde. El dígito de control de los números de cuenta se utiliza para evitar errores al transcribir números de cuenta en los bancos ya que algunos de sus dígitos son el resultado de un cálculo sobre el resto de los dígitos. Sobre un número de 10 dígitos, el dígito de control es el resultado de la siguiente formula (di representa el dígito i empezando a contar por la izquierda). Si el resultado fuera un número de dos cifras, se sustituye el diez por un 1 y el once por un 0. Por ejemplo: el dígito de control de 1111111111 es 0, y el de 1234567898 es 2.
@@ -54,21 +55,44 @@ _(Fuente: [Artículo de Wikipedia sobre el cifrado ROT13](https://es.wikipedia.o
 ### TAREA 3. Ejercicios para pensar
 En Ada, se ofrece la biblioteca de programas `Ada.Strings`, y algunas sub-bibliotecas como `Ada.Strings.Maps` y `Ada.Strings.Fixed` asociadas a ella para incluir funciones asociadas al tratamiento de cadenas de caracteres. En Ada.Strings.Maps se pueden definir conjuntos de caracteres y correspondencias o transformaciones entre caracteres. Con estos elementos, podríamos definir funciones que transformen un String escrito en Mayúsculas a minúsculas. El siguiente código se encarga de ello:
 ```ada
-With Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Maps; use Ada.Strings.Maps
-with Ada.Strings.Maps.Constants; use
-Ada.Strings.Maps.Constants;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Strings.Maps; use Ada.Strings.Maps;
+with Ada.Strings.Maps.Constants; use Ada.Strings.Maps.Constants;
 with Ada.Strings.Fixed; use Ada.Strings.Fixed;
 procedure traducir is
- Texto : String := "MAYUSCULAS minusculas 123244 .,;: ";
- Transformacion : Character_Mapping :=
-To_Mapping("ABCD","ZZAB");
+  Texto : String := "MAYUSCULAS minusculas 123244 .,;: ";
+  Transformacion : Character_Mapping := To_Mapping("ABCD","ZZAB");
 begin
- Translate(Texto,Lower_case_map); -- como procedimiento texto
-se cambia
- Put(Texto);
- Texto := Translate(Texto,Upper_case_map); -- como función
-texto igual
- Put_line(Texto);
+  Translate(Texto,Lower_case_map); -- como procedimiento texto se cambia
+  Put(Texto);
+  Texto := Translate(Texto,Upper_case_map); -- como función texto igual
+  Put_line(Texto);
 end traducir;
 ```
+`Translate` es una _función_ (y _procedimiento_, porque está definido de las dos maneras) que se encarga de aplicar una transformación de un conjunto de caracteres a otro. Toma como parámetro de entrada un texto y lo modifica (procedimiento) o devuelve una cadena de caracteres como resultado con la transformación que se le indica. Existen varias transformaciones definidas como constantes dentro de la biblioteca `Ada.Strings.Maps.Constants`, como `lower_case_map`, que traduce de un texto con letras mayúsculas a minúsculas (y el resto las deja tal cual), o `upper_case_map`, que traduce un texto con letras minúsculas y las pasa a mayúsculas (y el resto las deja igual). También podemos definirnos nuestra propia transformación (ver variable transfomación), para eso necesitamos crear una transformación o mapping entre dos conjuntos de caracteres. La función `To_mapping` nos devuelve la transformación (tipo `Character_mapping`) al proporcionarle los conjuntos de caracteres de partida y el de destino representados como dos strings. Para cada carácter del primer conjunto debe haber un carácter en el segundo. En el primer conjunto no debería haber caracteres repetidos, aunque en el segundo sí. En el ejemplo de arriba hemos creado una correspondencia que hace corresponder a las letras A y B la letra Z, a la letra C la letra A y a la D la letra B. A cualquier otro carácter se le hace corresponder consigo mismo.
+
+12. **Rot13 con bibliotecas de programas.** Implementa la _función_ **Rot13** utilizando el procedimiento Translate de Ada.Strings.Fixed y definiendo una transformación usando Ada.Strings.Maps que haga la transformación Rot13 indicada en un ejercicio anterior.
+13. **Pasar a mayúsculas.** Implementa el _procedimiento_ **Mayusculizar** que lea del teclado una serie de líneas de caracteres de no más de 80 caracteres por línea (sin centinela) y las escriba en mayúsculas. Para eso vamos a utilizar el procedimiento Get_Line(String, cuenta), que lee un string hasta que éste se llena o hasta que se acabe la línea de entrada y deja en cuenta el número de caracteres que ha leído.
+14. **Poetizar.** Implementa el _procedimiento_ **Poetizar** que lea del teclado una serie de líneas de caracteres y las escriba centradas en la pantalla. Para ello consideraremos que la pantalla tiene una amplitud de 40 caracteres y que se deben dejar a izquierda y a derecha un número similar (más menos 1) de espacios en blanco.
+Por ejemplo, dado el poema de Octavio Paz titulado Aquí (los fines de línea se han sustuido por '/'): Mis pasos en esta calle/Resuenan/En otra calle/Donde/Oigo mis pasos/Pasar en esta calle/Donde/Sólo es real la niebla. Debe quedar escrito de la siguiente manera:
+    ```
+    --------Mis pasos en esta calle---------
+    ----------------Resuenan----------------
+    -------------En otra calle--------------
+    -----------------Donde------------------
+    -------------Oigo mis pasos-------------
+    ----------Pasar en esta calle-----------
+    -----------------Donde------------------
+    ---------Solo es real la niebla---------
+    ```
+    Esta tarea se puede hacer de manera manual o utilizando el procedimiento/función Head, a la que se le pasa un String, un entero N y, si se quiere, un carácter C y devuelve un String del tamaño indicado por el entero, con tantos caracteres de relleno C como hagan falta para completar el String. Los caracteres de relleno se ponen a la derecha si se elige una alineación (alignment) a la izquierda (left), a la izquierda si la alineación es a la derecha (right), y por ambos lados si la alineación es en el centro (center). Si no se pasa el carácter de relleno, se rellena con espacios por defecto.
+    ```ada
+    function Head  (Source : in String;
+                    Count  : in Natural;
+                    Pad    : in Character := Space)
+                    return String;
+    procedure Head (Source  : in out String;
+                    Count   : in Natural;
+                    Justify : in Alignment := Left;
+                    Pad     : in Character := Space);
+    ```
